@@ -2,6 +2,7 @@ import requests
 import sqlite3
 import json
 import time
+import cloudscraper
 from bs4 import BeautifulSoup 
 
 
@@ -10,7 +11,9 @@ def links_scrap(page_num, link_before="https://it.pracuj.pl/praca?pn=", link_aft
     all_links = []
 
     URL = link_before + str(page_num) + link_after
-    page = requests.get(URL)
+
+    scraper = cloudscraper.create_scraper() 
+    page = scraper.get(URL)
     
     soup = BeautifulSoup(page.content, "html.parser")
     
@@ -50,7 +53,9 @@ def scrape_job_listing(url):
         dict: A dictionary with the scraped job details.
     """
     # Fetch the page content
-    response = requests.get(url)
+    scraper = cloudscraper.create_scraper() 
+    response = scraper.get(url)
+    
     if response.status_code != 200:
         raise Exception(f"Error fetching the URL: {url} (Status code: {response.status_code})")
     
